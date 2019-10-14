@@ -7,6 +7,7 @@ Requirements
 The following applications must be installed on the host where the VM image is being built
 * Ansible - Image configuration
 * Packer - Automation tool
+* Vagrant - Open-source software product for building and maintaining portable virtual software development environments
 * QEMU - Image builder
 
 Directories
