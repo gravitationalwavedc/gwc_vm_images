@@ -26,6 +26,10 @@ Example Executions
 * [Image building - Packer](./docs/IMAGE_BUILD.md)
 * [Image Submission - Openstack](./docs/IMAGE_SUBMISSION)
 
+Reference
+----------------
+* [NeCTAR-RC/nectar-images](https://github.com/NeCTAR-RC/nectar-images)
+
 License
 -------
 * [GPU License](./LICENCE.md)
