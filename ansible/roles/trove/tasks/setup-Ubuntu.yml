@@ -1,0 +1,72 @@
+---
+- name: Add Ubuntu cloud archive key
+  apt_key:
+    id: 391A9AA2147192839E9DB0315EDB1B62EC4926EA
+    keyserver: keyserver.ubuntu.com
+
+- name: Add Ubuntu cloud archive repository
+  apt_repository:
+    repo: "deb http://ubuntu-cloud.archive.canonical.com/ubuntu {{ ansible_distribution_release }}-updates/{{ trove_openstack_version }} main"
+    update_cache: yes
+
+- name: Add Nectar archive keys
+  apt_key:
+    url: "{{ item }}"
+  with_items:
+    - http://download.rc.nectar.org.au/nectar-archive-key-2016.gpg
+    - http://download.rc.nectar.org.au/nectar-custom.gpg
+
+- name: Add Nectar repositories
+  apt_repository:
+    repo: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - "deb http://download.rc.nectar.org.au/nectar-ubuntu {{ ansible_distribution_release }} main"
+    - "deb http://download.rc.nectar.org.au/nectar-ubuntu {{ ansible_distribution_release }}-{{ trove_openstack_version }} main"
+    - "deb http://download.rc.nectar.org.au/nectar-ubuntu {{ ansible_distribution_release }}-{{ trove_openstack_version }}-testing main"
+
+- name: Install Trove Guest agent
+  package:
+    name:
+      - trove-guestagent
+      - debconf-utils
+    state: present
+
+- name: Remove existing Trove config
+  shell: rm -rf /etc/trove
+  args:
+    warn: no
+
+- name: Create Trove config directory
+  file:
+    path: /etc/trove/conf.d
+    state: directory
+    owner: root
+    group: trove
+    mode: 0775
+    recurse: yes
+
+- name: Remove any old init scripts
+  file:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/init.d/trove-guestagent
+    - /etc/init/trove-guestagent.conf
+
+- name: Install new systemd service config
+  copy:
+    src: "{{ ansible_distribution }}{{ ansible_distribution_major_version }}/trove-guestagent.service"
+    dest: /etc/systemd/system/trove-guestagent.service
+
+- name: Enable trove guest agent service
+  service:
+    name: trove-guestagent
+    enabled: yes
+
+- name: Create trove sudoers file
+  copy:
+    dest: /etc/sudoers.d/60_trove_guest
+    content: 'trove	ALL=(ALL)	NOPASSWD:ALL'
+    mode: 0440
+    validate: 'visudo -cf %s'

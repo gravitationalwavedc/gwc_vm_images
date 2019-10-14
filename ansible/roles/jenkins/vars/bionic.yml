@@ -1,0 +1,9 @@
+---
+openstack_version: queens
+packages:
+  - libpng-dev
+
+nodejs_repo: node_8.x
+
+gem_packages:
+  - puppet

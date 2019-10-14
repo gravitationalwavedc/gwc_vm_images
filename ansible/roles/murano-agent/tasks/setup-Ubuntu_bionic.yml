@@ -1,0 +1,33 @@
+---
+- name: Remove any old init scripts
+  file:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/init.d/murano-agent
+    - /etc/init/murano-agent.conf
+
+- name: Remove existing Murano config
+  shell: "rm -fr {{ item }}"
+  args:
+    warn: no
+  with_items:
+    - /etc/murano-agent
+    - /var/log/murano
+    - /var/log/murano-agent
+
+- name: Install Murano Guest agent
+  package:
+    name: murano-agent
+    state: present
+
+- name: Install updated systemd service config
+  template:
+    src: systemd-murano-agent.service.j2
+    dest: /etc/systemd/system/murano-agent.service
+
+- name: Enable murano-agent service
+  systemd:
+    name: murano-agent
+    enabled: yes
+    daemon_reload: yes

@@ -1,9 +1,5 @@
-#  Local .terraform directories
-**/.terraform/*
+# Vagrant local builds
+.vagrant
 
-# .tfstate files
-*.tfstate
-*.tfstate.*
-
-# .tfvars files
-*.tfvars
+# Packer build cache
+packer_cache

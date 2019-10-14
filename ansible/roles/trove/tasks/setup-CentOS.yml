@@ -1,0 +1,5 @@
+---
+- name: Install Trove Guest agent
+  package:
+    name: trove-guestagent
+    state: present

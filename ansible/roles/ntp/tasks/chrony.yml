@@ -1,0 +1,20 @@
+---
+- name: Include OS-specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}_{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution }}_{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
+
+- name: Install chrony package
+  package:
+    name: chrony
+    state: present
+
+- name: Ensure chrony is running and enabled as configured.
+  service:
+    name: chronyd
+    state: started
+    enabled: yes

@@ -1,0 +1,12 @@
+---
+cloud_init_packages:
+  - cloud-init
+  - cloud-utils-growpart
+
+user_groups:
+  - adm
+  - wheel
+
+distro: rhel
+
+ssh_svcname: sshd

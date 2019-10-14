@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# CHECK routing rule, if exist, delete rule
+# ip route get from 0.0.0.0 to 10.8.0.1
+# ip route show | grep "default via 10.8.0.1 dev eth1"
+# sudo route del -net 0.0.0.0 gw 10.8.0.1 netmask 0.0.0.0 dev eth1
+# sudo ip route del 0.0.0.0 via 10.8.0.1 dev eth1
+# 
+# ip route get 10.8.0.0/22
+# ip route show | grep "10.8.0.0/22 dev eth1"
+# sudo route del -net 10.8.0.0 gw 0.0.0.0 netmask 255.255.252.0 dev eth1
+# sudo ip route del 0.0.0.0/22 dev eth1
+
+CHECK=`ip route show default | wc -l`
+
+if [ $CHECK -eq 2 ]; then
+  if ip route show | grep "default via 10.8.0.1 dev eth1"; then
+          route del -net 0.0.0.0 gw 10.8.0.1 netmask 0.0.0.0 dev eth1
+          echo "Route deleted: default via 10.8.0.1 dev eth1\n"
+  fi
+#  if ip route show | grep "10.8.0.0/22 dev eth1"; then
+#          route del -net 10.8.0.0 gw 0.0.0.0 netmask 255.255.252.0 dev eth1
+#          echo "Route deleted: 10.8.0.0/22 dev eth1\n"
+#  fi
+fi
+
+ip route show

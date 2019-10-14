@@ -1,0 +1,23 @@
+---
+- name: Install fail2ban packages
+  package:
+    name:
+      - fail2ban-server
+      - fail2ban-systemd
+      - ed
+    state: present
+
+- name: Make rundir
+  file:
+    path: /var/run/fail2ban
+    state: directory
+
+- name: Install 00-hostdeny.conf
+  template:
+    src: 00-hostdeny.conf.j2
+    dest: /etc/fail2ban/jail.d/00-hostdeny.conf
+
+- name: Install 01-sshd.conf
+  template:
+    src: 01-sshd.conf.j2
+    dest: /etc/fail2ban/jail.d/01-sshd.conf
