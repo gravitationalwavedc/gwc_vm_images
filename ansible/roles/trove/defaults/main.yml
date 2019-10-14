@@ -1,2 +1,0 @@
----
-trove_generated_password: "{{ ansible_fqdn | hash('md5') }}"
